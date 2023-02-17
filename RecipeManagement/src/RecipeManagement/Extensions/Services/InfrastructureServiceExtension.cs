@@ -4,6 +4,8 @@ using RecipeManagement.Databases;
 using RecipeManagement.Resources;
 using RecipeManagement.Services;
 using Configurations;
+using Hangfire;
+using Hangfire.PostgreSql;
 using Microsoft.EntityFrameworkCore;
 
 public static class ServiceRegistration
@@ -24,6 +26,24 @@ public static class ServiceRegistration
             options.UseNpgsql(connectionString,
                 builder => builder.MigrationsAssembly(typeof(RecipesDbContext).Assembly.FullName)));
 
+        var hangfireOptions = new PostgreSqlStorageOptions()
+        {
+            SchemaName = "hangfire",
+            PrepareSchemaIfNecessary = true
+        };
+        services.AddHangfire(hangfireConfig => hangfireConfig
+            .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+            .UseColouredConsoleLogProvider()
+            .UseSimpleAssemblyNameTypeSerializer()
+            .UseRecommendedSerializerSettings()
+            .UsePostgreSqlStorage(connectionString, hangfireOptions)
+        );
+        services.AddHangfireServer(o =>
+        {
+            o.ServerName = $"RecipeManagement-{env.EnvironmentName}";
+            o.Queues = new[] { "loop-queue" };
+        });
+        
         services.AddHostedService<MigrationHostedService<RecipesDbContext>>();
 
         // Auth -- Do Not Delete

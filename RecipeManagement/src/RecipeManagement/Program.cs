@@ -1,3 +1,4 @@
+using Hangfire;
 using Serilog;
 using RecipeManagement.Extensions.Application;
 using RecipeManagement.Extensions.Host;
@@ -37,6 +38,8 @@ app.UseEndpoints(endpoints =>
     endpoints.MapHealthChecks("/api/health");
     endpoints.MapControllers();
 });
+
+app.UseHangfireDashboard();
 
 app.UseSwaggerExtension(builder.Configuration, builder.Environment);
 

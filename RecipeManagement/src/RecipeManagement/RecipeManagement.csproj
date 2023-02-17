@@ -20,6 +20,8 @@
     <PackageReference Include="Bogus" Version="34.0.2" />
     <PackageReference Include="EFCore.NamingConventions" Version="7.0.2" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2" />
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.7.33" />
+    <PackageReference Include="Hangfire.PostgreSql" Version="1.9.10" />
     <PackageReference Include="HeimGuard" Version="0.3.0" />
     <PackageReference Include="Mapster" Version="7.3.0" />
     <PackageReference Include="Mapster.DependencyInjection" Version="1.0.0" />
