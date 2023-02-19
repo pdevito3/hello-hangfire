@@ -26,17 +26,12 @@ public static class ServiceRegistration
             options.UseNpgsql(connectionString,
                 builder => builder.MigrationsAssembly(typeof(RecipesDbContext).Assembly.FullName)));
 
-        var hangfireOptions = new PostgreSqlStorageOptions()
-        {
-            SchemaName = "hangfire",
-            PrepareSchemaIfNecessary = true
-        };
         services.AddHangfire(hangfireConfig => hangfireConfig
             .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
             .UseColouredConsoleLogProvider()
             .UseSimpleAssemblyNameTypeSerializer()
             .UseRecommendedSerializerSettings()
-            .UsePostgreSqlStorage(connectionString, hangfireOptions)
+            .UsePostgreSqlStorage(connectionString)
         );
         services.AddHangfireServer(o =>
         {

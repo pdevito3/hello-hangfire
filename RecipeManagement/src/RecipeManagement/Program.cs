@@ -36,10 +36,9 @@ app.UseRouting();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapHealthChecks("/api/health");
+    endpoints.MapHangfireDashboard();
     endpoints.MapControllers();
 });
-
-app.UseHangfireDashboard();
 
 app.UseSwaggerExtension(builder.Configuration, builder.Environment);
 
