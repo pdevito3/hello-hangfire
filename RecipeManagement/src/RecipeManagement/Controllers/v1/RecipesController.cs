@@ -24,43 +24,6 @@ public sealed class RecipesController: ControllerBase
         _mediator = mediator;
     }
     
-    
-    public class DoThisThingHandler
-    {
-        [Queue("loop-queue")]
-        [AutomaticRetry(Attempts = 3)]
-        public void Handle(int jobNumber)
-        {
-            // Generate a random number between 1 and 10
-            int randomNumber = new Random().Next(1, 11);
-
-            // If the random number is greater than 5, throw an exception
-            if (randomNumber > 5)
-            {
-                Console.WriteLine("Failed job number: {0}", jobNumber);
-                throw new Exception($"Error processing job {jobNumber}");
-            }
-            
-            Console.WriteLine("Completed job number: {0}", jobNumber);
-        }
-    }
-    
-    [HttpPost("enqueue")]
-    public Task<IActionResult> Enqueue()
-    {
-        var handler = new DoThisThingHandler();
-        for (int i = 1; i <= 300; i++)
-        {
-            int jobNumber = i;
-
-            // Enqueue the job
-            BackgroundJob.Enqueue(() => handler.Handle(jobNumber));
-        }
-
-        return Task.FromResult<IActionResult>(Ok());
-    }
-    
-
     /// <summary>
     /// Gets a list of all Recipes.
     /// </summary>
