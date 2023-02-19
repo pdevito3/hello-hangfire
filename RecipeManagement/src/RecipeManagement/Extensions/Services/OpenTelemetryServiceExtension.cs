@@ -51,6 +51,7 @@ public static class OpenTelemetryServiceExtension
                 .AddSqlClientInstrumentation(opt => opt.SetDbStatementForText = true)
                 .AddAspNetCoreInstrumentation()
                 .AddEntityFrameworkCoreInstrumentation()
+                .AddHangfireInstrumentation()
                 .AddJaegerExporter(o =>
                 {
                     o.AgentHost = configuration.GetJaegerHostValue();
