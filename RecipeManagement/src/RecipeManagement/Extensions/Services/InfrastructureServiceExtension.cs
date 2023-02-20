@@ -36,7 +36,7 @@ public static class ServiceRegistration
         services.AddHangfireServer(o =>
         {
             o.ServerName = $"RecipeManagement-{env.EnvironmentName}";
-            o.Queues = new[] { "loop-queue" };
+            o.Queues = new[] { "loop-queue", "recipe-logger" };
         });
         
         services.AddHostedService<MigrationHostedService<RecipesDbContext>>();

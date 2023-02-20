@@ -17,11 +17,11 @@ using MediatR;
 [ApiVersion("1.0")]
 public sealed class HangfireController: ControllerBase
 {
-    private readonly IMediator _mediator;
+    private readonly IBackgroundJobClient _backgroundJobClient;
 
-    public HangfireController(IMediator mediator)
+    public HangfireController(IBackgroundJobClient backgroundJobClient)
     {
-        _mediator = mediator;
+        _backgroundJobClient = backgroundJobClient;
     }
 
     public class PrintAJob
@@ -74,6 +74,13 @@ public sealed class HangfireController: ControllerBase
         var handler = new PrintAJob();
         RecurringJob.AddOrUpdate("PrintAJob", () => handler.Handle(1), Cron.Minutely);
 
+        return Ok();
+    }
+    
+    [HttpPost("recipe-logger")]
+    public IActionResult RecipeLogger()
+    {
+        _backgroundJobClient.Enqueue<LogRandomRecipe>(x => x.Handle());
         return Ok();
     }
 }
