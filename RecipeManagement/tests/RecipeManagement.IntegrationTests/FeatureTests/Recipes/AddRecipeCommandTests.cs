@@ -7,6 +7,10 @@ using FluentAssertions.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 using System.Threading.Tasks;
+using Hangfire;
+using Hangfire.Common;
+using Hangfire.States;
+using Moq;
 using RecipeManagement.Domain.Recipes.Features;
 using SharedKernel.Exceptions;
 
@@ -25,6 +29,8 @@ public class AddRecipeCommandTests : TestBase
         var recipeCreated = await testingServiceScope.ExecuteDbContextAsync(db => db.Recipes
             .FirstOrDefaultAsync(r => r.Id == recipeReturned.Id));
 
+        var bgClient = testingServiceScope.GetService<IBackgroundJobClient>();
+
         // Assert
         recipeReturned.Title.Should().Be(fakeRecipeOne.Title);
         recipeReturned.Directions.Should().Be(fakeRecipeOne.Directions);
@@ -41,5 +47,10 @@ public class AddRecipeCommandTests : TestBase
         recipeCreated.ImageLink.Should().Be(fakeRecipeOne.ImageLink);
         recipeCreated.Visibility.Should().Be(fakeRecipeOne.Visibility);
         recipeCreated.DateOfOrigin.Should().Be(fakeRecipeOne.DateOfOrigin);
+        
+        Mock.Get(bgClient).Verify(x => x.Create(
+                It.Is<Job>(job => job.Method.Name == nameof(LogRandomRecipe.Handle)),
+                It.IsAny<EnqueuedState>()), 
+            Times.Once);
     }
 }

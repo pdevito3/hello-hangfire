@@ -10,6 +10,7 @@ using DotNet.Testcontainers.Configurations;
 using DotNet.Testcontainers.Containers;
 using FluentAssertions;
 using FluentAssertions.Extensions;
+using Hangfire;
 using Moq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -50,6 +51,7 @@ public class TestFixture : IAsyncLifetime
 
         // add any mock services here
         services.ReplaceServiceWithSingletonMock<IHttpContextAccessor>();
+        services.ReplaceServiceWithSingletonMock<IBackgroundJobClient>();
 
         var provider = services.BuildServiceProvider();
         BaseScopeFactory = provider.GetService<IServiceScopeFactory>();

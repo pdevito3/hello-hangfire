@@ -78,4 +78,10 @@ public class Recipe : BaseEntity
     }
     
     protected Recipe() { } // For EF + Mocking
+
+    public void SetDescription(string description)
+    {
+        Description = description;
+        QueueDomainEvent(new RecipeUpdated() { Id = Id });
+    }
 }
